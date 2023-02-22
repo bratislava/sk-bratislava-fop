@@ -23,7 +23,8 @@ public class FopHandler implements Handler {
                 .get();
 
         byte[] out = service.transform(body.data, body.xslt);
-        ctx.result(new ByteArrayInputStream(out));
+
+        ctx.contentType("application/pdf").result(new ByteArrayInputStream(out));
     }
 
 }
