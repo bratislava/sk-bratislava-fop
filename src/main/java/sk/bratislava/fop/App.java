@@ -21,6 +21,7 @@ public class App {
 
         Javalin app = Javalin.create(/* config */)
                 .get("/", ctx -> ctx.result("Hello World"))
+                .post("/fop", new FopHandler())
                 .start(port);
     }
 }
