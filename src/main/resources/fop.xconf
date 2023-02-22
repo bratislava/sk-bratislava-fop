@@ -71,12 +71,12 @@ the location of this file.
 
 
         <font kerning="yes"
-          embed-url="https://github.com/kristianduda/font/blob/5c426d8072e2757dac7c0a6fcd65fbb3a087834a/arial.ttf?raw=true">
+          embed-url="https://github.com/bratislava/sk-bratislava-fop/blob/master/public/arial.ttf?raw=true">
           <font-triplet name="Arial" style="normal" weight="normal" />
           <font-triplet name="ArialMT" style="normal" weight="normal" />
         </font>
         <font kerning="yes"
-          embed-url="https://github.com/kristianduda/font/blob/5c426d8072e2757dac7c0a6fcd65fbb3a087834a/arial.ttf?raw=true">
+          embed-url="https://github.com/bratislava/sk-bratislava-fop/blob/master/public/arialb.ttf?raw=true">
           <font-triplet name="Arial" style="normal" weight="bold" />
           <font-triplet name="ArialMT" style="normal" weight="bold" />
         </font>
