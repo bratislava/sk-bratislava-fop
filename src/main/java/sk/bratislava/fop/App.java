@@ -9,7 +9,7 @@ public class App {
         if (envPort != null) {
             try {
                 port = Integer.parseInt(envPort);
-            } finally {
+            } catch (Exception ex) {
 
             }
         }

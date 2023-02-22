@@ -1,9 +1,6 @@
 package sk.bratislava.fop;
 
 import java.io.ByteArrayInputStream;
-import java.io.StringReader;
-
-import javax.xml.transform.stream.StreamSource;
 
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -21,10 +18,11 @@ public class FopHandler implements Handler {
     @Override
     public void handle(Context ctx) throws Exception {
         FopDto body = ctx.bodyValidator(FopDto.class)
-                .check(obj -> !StringUtils.IsNullOrEmpty(obj.data), Errors.BAD_REQUEST)
+                .check(obj -> !StringUtils.IsNullOrEmpty(obj.data) && !StringUtils.IsNullOrEmpty(obj.xslt),
+                        Errors.BAD_REQUEST)
                 .get();
 
-        byte[] out = service.transform(new StreamSource(new StringReader(body.data)));
+        byte[] out = service.transform(body.data, body.xslt);
         ctx.result(new ByteArrayInputStream(out));
     }
 

@@ -3,9 +3,9 @@ package sk.bratislava.fop;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.io.StringReader;
 
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
@@ -17,10 +17,12 @@ import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
 
 public class FopService {
+    private StreamSource toStreamSource(String str) {
+        return new StreamSource(new StringReader(str));
+    }
 
-    public byte[] transform(Source src) throws Exception {
+    public byte[] transform(String data, String xslt) throws Exception {
         InputStream config = getClass().getClassLoader().getResourceAsStream("fop.xconf");
-        InputStream xslt = getClass().getClassLoader().getResourceAsStream("form.fo.xslt");
 
         // configure fopFactory as desired
         final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI(), config);
@@ -35,7 +37,7 @@ public class FopService {
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, out);
             // Setup XSLT
             TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer transformer = factory.newTransformer(new StreamSource(xslt));
+            Transformer transformer = factory.newTransformer(toStreamSource(xslt));
 
             // Set the value of a <param> in the stylesheet
             transformer.setParameter("versionParam", "2.0");
@@ -43,7 +45,7 @@ public class FopService {
             // Resulting SAX events (the generated FO) must be piped through to FOP
             Result res = new SAXResult(fop.getDefaultHandler());
             // Start XSLT transformation and FOP processing
-            transformer.transform(src, res);
+            transformer.transform(toStreamSource(data), res);
 
         } finally {
             out.close();
