@@ -23,3 +23,6 @@
 hs_err_pid*
 target
 dependency-reduced-pom.xml
+
+# bratiska-cli manifest files
+manifest-*.y?ml

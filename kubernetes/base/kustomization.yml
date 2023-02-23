@@ -1,0 +1,18 @@
+resources:
+  - deployment.yml
+  - service.yml
+  - ingress.yml
+configurations:
+  - configuration.yml
+
+# Keep as is
+namePrefix: ${BUILD_REPOSITORY_NAME}-
+commonLabels:
+  app: ${BUILD_REPOSITORY_NAME}
+  source: ${BUILD_REPOSITORY_NAME}
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+commonAnnotations:
+  repositoryUrl: ${BUILD_REPOSITORY_URI}

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  namespace: ${NAMESPACE}
+  labels:
+    service: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: app
+  template:
+    metadata:
+      labels:
+        service: app
+    spec:
+      containers:
+        - image: ${IMAGE_TAG}
+          name: app
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: ${PORT}
+            name: api
+          resources:
+            limits:
+              cpu: ${APP_CPU_LIMITS}
+              memory: ${APP_MEMORY_LIMITS}
+            requests:
+              cpu: ${APP_CPU_REQUESTS}
+              memory: ${APP_MEMORY_REQUESTS}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+        - name: ${IMAGE_PULL_SECRET}
