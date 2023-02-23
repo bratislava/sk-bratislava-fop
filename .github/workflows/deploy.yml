@@ -39,22 +39,36 @@ jobs:
       - name: Build with Maven
         run: |
           mvn clean package
+ 
+      - uses: actions/upload-artifact@master
+        with:
+          name: target
+          path: target/
 
   conditions:
     name: Check for cluster conditions
     uses: bratislava/github-actions/.github/workflows/cluster-deploy-conditions.yml@stable
 
   deploy-dev:
-    name: Deploy to DEV
+    name: 
     if: needs.conditions.outputs.dev == 'true'
     needs: [conditions, build]
-    uses: bratislava/github-actions/.github/workflows/deploy-with-bratiska-cli.yml@stable
-    with:
-      cluster: tkg-innov-dev
-      url: https://tkg.dev.bratislava.sk
-      debug: --debug
-      version: beta
-      directory: "."
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@master
+        with:
+          name: target
+          path: ./target
+
+      - name: Deploy to DEV 
+        uses: bratislava/github-actions/.github/workflows/deploy-with-bratiska-cli.yml@stable
+        with:
+          cluster: tkg-innov-dev
+          url: https://tkg.dev.bratislava.sk
+          debug: --debug
+          version: beta
+          directory: "."
       
     secrets:
       service-account: ${{ secrets.DEV_STANDALONE_TOKEN }}
