@@ -12,10 +12,10 @@ on:
 env:
   CONTAINER_REGISTRY: harbor.bratislava.sk
   IMAGE_PATH: standalone
-  NAMESPACE: magproxy
+  NAMESPACE: standalone
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       PROJECT_VERSION: 0.1-SNAPSHOT
@@ -88,7 +88,7 @@ jobs:
           kubectl config set-context ${CLUSTER} --cluster=${CLUSTER} --user=default
           kubectl config use-context ${CLUSTER}
 
-      - name: Tag & Push to Harbor
+      - name: Build & Deploy
         run: |
           if [[ "${GITHUB_BASE_REF,,}" =~ "stage" ]]; then
             bratiska-cli deploy --staging --debug --namespace=${NAMESPACE}
