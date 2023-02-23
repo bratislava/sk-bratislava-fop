@@ -13,7 +13,6 @@ env:
   CONTAINER_REGISTRY: harbor.bratislava.sk
   IMAGE_PATH: standalone
   NAMESPACE: magproxy
-  ENVIRONMENT: prod
 
 jobs:
   build:
@@ -54,17 +53,11 @@ jobs:
       url: https://tkg.dev.bratislava.sk
       debug: --debug
       version: beta
+      
     secrets:
       service-account: ${{ secrets.DEV_STANDALONE_TOKEN }}
       registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
       sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
-    - name: 'Store Kubernetes Deploy Manifest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: kubernetes-manifest
-        path: manifest-*.yaml
-        retention-days: 1
 
   deploy-staging:
     name: Deploy to STAGING
@@ -75,17 +68,11 @@ jobs:
       url: https://tkg.staging.bratislava.sk
       debug: --debug
       flag: --staging
+      namespace: ${NAMESPACE}
     secrets:
       service-account: ${{ secrets.STAGING_STANDALONE_TOKEN }}
       registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
       sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
-    - name: 'Store Kubernetes Deploy Manifest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: kubernetes-manifest
-        path: manifest-*.yaml
-        retention-days: 1
 
   deploy-prod:
     name: Deploy to PROD
@@ -94,17 +81,9 @@ jobs:
     with:
       cluster: tkg-innov-prod
       url: https://tkg.bratislava.sk
-      # keep the debug as we want to store manifests
-      debug: --debug
       flag: --production
+      namespace: ${NAMESPACE}
     secrets:
       service-account: ${{ secrets.PROD_STANDALONE_TOKEN }}
       registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
       sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-
-    - name: 'Store Kubernetes Deploy Manifest'
-      uses: actions/upload-artifact@v3
-      with:
-        name: kubernetes-manifest
-        path: manifest-*.yaml
-        retention-days: 5
