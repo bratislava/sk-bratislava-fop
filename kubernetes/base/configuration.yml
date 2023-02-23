@@ -1,0 +1,12 @@
+namePrefix:
+  - path: metadata/name
+  - kind: Ingress
+    path: spec/tls/secretName
+  - path: spec/template/spec/containers/envFrom/secretRef/name
+  - kind: SealedSecret
+    path: spec/template/metadata/name
+  - kind: StatefulSet
+    path: spec/volumeClaimTemplates/metadata/name
+  - kind: StatefulSet
+    path: spec/template/spec/containers/volumeMounts/name
+  - path: spec/template/spec/volumes/secret/secretName

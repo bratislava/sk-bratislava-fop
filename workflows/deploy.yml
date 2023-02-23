@@ -1,0 +1,110 @@
+name: Java CI
+
+on:
+  push:
+    tags:
+      - 'dev**'
+      - 'staging**'
+      - 'prod**'
+    branches:
+      - master
+
+env:
+  CONTAINER_REGISTRY: harbor.bratislava.sk
+  IMAGE_PATH: standalone
+  NAMESPACE: magproxy
+  ENVIRONMENT: prod
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      PROJECT_VERSION: 0.1-SNAPSHOT
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Setup Maven
+        run: |
+          mvn --version
+          # This step is a workaround to avoid a decryption issue of Spotify's
+          # com.spotify.dockerfile-maven plugin and github's provided maven
+          # settings.xml file
+          rm ~/.m2/settings.xml
+
+      - name: Build with Maven
+        run: |
+          mvn clean package
+
+  conditions:
+    name: Check for cluster conditions
+    uses: bratislava/github-actions/.github/workflows/cluster-deploy-conditions.yml@stable
+
+  deploy-dev:
+    name: Deploy to DEV
+    if: needs.conditions.outputs.dev == 'true'
+    uses: bratislava/github-actions/.github/workflows/deploy-with-bratiska-cli.yml@stable
+    with:
+      cluster: tkg-innov-dev
+      url: https://tkg.dev.bratislava.sk
+      debug: --debug
+      version: beta
+    secrets:
+      service-account: ${{ secrets.DEV_STANDALONE_TOKEN }}
+      registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
+      sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+    - name: 'Store Kubernetes Deploy Manifest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: kubernetes-manifest
+        path: manifest-*.yaml
+        retention-days: 1
+
+  deploy-staging:
+    name: Deploy to STAGING
+    if: needs.conditions.outputs.staging == 'true'
+    uses: bratislava/github-actions/.github/workflows/deploy-with-bratiska-cli.yml@stable
+    with:
+      cluster: tkg-innov-staging
+      url: https://tkg.staging.bratislava.sk
+      debug: --debug
+      flag: --staging
+    secrets:
+      service-account: ${{ secrets.STAGING_STANDALONE_TOKEN }}
+      registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
+      sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+    - name: 'Store Kubernetes Deploy Manifest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: kubernetes-manifest
+        path: manifest-*.yaml
+        retention-days: 1
+
+  deploy-prod:
+    name: Deploy to PROD
+    if: needs.conditions.outputs.prod == 'true'
+    uses: bratislava/github-actions/.github/workflows/deploy-with-bratiska-cli.yml@stable
+    with:
+      cluster: tkg-innov-prod
+      url: https://tkg.bratislava.sk
+      # keep the debug as we want to store manifests
+      debug: --debug
+      flag: --production
+    secrets:
+      service-account: ${{ secrets.PROD_STANDALONE_TOKEN }}
+      registry-pass: ${{ secrets.HARBOR_REGISTRY_PASSWORD }}
+      sentry-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
+
+    - name: 'Store Kubernetes Deploy Manifest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: kubernetes-manifest
+        path: manifest-*.yaml
+        retention-days: 5
