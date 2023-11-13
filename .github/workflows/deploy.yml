@@ -62,7 +62,7 @@ jobs:
 
       - name: Set Cluster Info & Setup kubectl
         run: |
-          if [[ "${GITHUB_BASE_REF,,}" =~ "stage" ]]; then
+          if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
             export ENVIRONMENT="staging"
             export CLUSTER_URL="https://tkg.staging.bratislava.sk"
             export CLUSTER_TOKEN=${{ secrets.STAGING_STANDALONE_TOKEN }}
@@ -90,7 +90,7 @@ jobs:
 
       - name: Build & Deploy
         run: |
-          if [[ "${GITHUB_BASE_REF,,}" =~ "stage" ]]; then
+          if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
             bratiska-cli deploy --staging --debug --namespace=${NAMESPACE}
           elif [[ "${GITHUB_BASE_REF,,}" =~ "prod" || "${GITHUB_BASE_REF,,}" =~ "master" || "${GITHUB_BASE_REF,,}" =~ "main" ]]; then
             bratiska-cli deploy --production --namespace=${NAMESPACE}
