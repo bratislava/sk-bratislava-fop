@@ -1,8 +1,8 @@
 {
     "envs": {
         "PORT": 7000,
-        "APP_CPU_LIMITS": "500m",
-        "APP_MEMORY_LIMITS": "512M",
+        "APP_CPU_LIMITS": "100m",
+        "APP_MEMORY_LIMITS": "128M",
         "APP_CPU_REQUESTS": "1m",
         "APP_MEMORY_REQUESTS": "16M"
     }

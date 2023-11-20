@@ -84,21 +84,7 @@
     <dependency>
       <groupId>org.apache.xmlgraphics</groupId>
       <artifactId>fop</artifactId>
-      <version>1.1</version>
+      <version>2.7</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.avalon.framework</groupId>
-      <artifactId>avalon-framework-api</artifactId>
-      <version>4.2.0</version>
-      <scope>system</scope>
-      <systemPath>${project.basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
-  </dependency>
-  <dependency>
-    <groupId>org.apache.avalon.framework</groupId>
-    <artifactId>avalon-framework-impl</artifactId>
-    <version>4.2.0</version>
-    <scope>system</scope>
-    <systemPath>${project.basedir}/lib/avalon-framework-4.2.0.jar</systemPath>
-</dependency>
   </dependencies>
 </project>
