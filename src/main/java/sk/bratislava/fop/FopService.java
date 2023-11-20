@@ -2,6 +2,7 @@ package sk.bratislava.fop;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.StringReader;
 
 import javax.xml.transform.Result;
@@ -21,16 +22,10 @@ public class FopService {
     }
 
     public byte[] transform(String data, String xslt) throws Exception {
-        // fop must use version 1.1 according to current legislation
-        // in case it ever gets updated, the following lines work for configuration of 2.x
-        // + we can get rid of the avalon dependencies in lib directory, which are needed only for 1.1
-        
-        // InputStream config = getClass().getClassLoader().getResourceAsStream("fop.xconf");
-        // final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI(), config);
+        InputStream config = getClass().getClassLoader().getResourceAsStream("fop.xconf");
 
         // configure fopFactory as desired
-        final FopFactory fopFactory = FopFactory.newInstance();
-        fopFactory.setUserConfig(new File("./resources/fop.xconf"));
+        final FopFactory fopFactory = FopFactory.newInstance(new File(".").toURI(), config);
         FOUserAgent foUserAgent = fopFactory.newFOUserAgent();
         // configure foUserAgent as desired
 
@@ -45,7 +40,7 @@ public class FopService {
             Transformer transformer = factory.newTransformer(toStreamSource(xslt));
 
             // Set the value of a <param> in the stylesheet
-            transformer.setParameter("versionParam", "1.1");
+            transformer.setParameter("versionParam", "2.0");
 
             // Resulting SAX events (the generated FO) must be piped through to FOP
             Result res = new SAXResult(fop.getDefaultHandler());
