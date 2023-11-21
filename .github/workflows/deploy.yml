@@ -62,14 +62,14 @@ jobs:
 
       - name: Set Cluster Info & Setup kubectl
         run: |
-          if [[ "${GITHUB_REF_NAME,,}" =~ "stagi" ]]; then
-            export ENVIRONMENT="staging"
-            export CLUSTER_URL="https://tkg.staging.bratislava.sk"
-            export CLUSTER_TOKEN=${{ secrets.STAGING_STANDALONE_TOKEN }}
-          elif [[ "${GITHUB_REF_NAME,,}" =~ "prod" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
+          if [[ "${GITHUB_REF_NAME,,}" =~ "prod" ]]; then
             export ENVIRONMENT="prod"
             export CLUSTER_URL="https://tkg.bratislava.sk"
             export CLUSTER_TOKEN=${{ secrets.PROD_STANDALONE_TOKEN }}
+          elif [[ "${GITHUB_REF_NAME,,}" =~ "stagi" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
+            export ENVIRONMENT="staging"
+            export CLUSTER_URL="https://tkg.staging.bratislava.sk"
+            export CLUSTER_TOKEN=${{ secrets.STAGING_STANDALONE_TOKEN }}
           else
             export ENVIRONMENT="dev"
             export CLUSTER_URL="https://tkg.dev.bratislava.sk"
@@ -90,10 +90,10 @@ jobs:
 
       - name: Build & Deploy
         run: |
-          if [[ "${GITHUB_REF_NAME,,}" =~ "stagi" ]]; then
-            bratiska-cli deploy --staging --debug --namespace=${NAMESPACE}
-          elif [[ "${GITHUB_REF_NAME,,}" =~ "prod" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
+          if [[ "${GITHUB_REF_NAME,,}" =~ "prod" ]]; then
             bratiska-cli deploy --production --namespace=${NAMESPACE}
+          elif [[ "${GITHUB_REF_NAME,,}" =~ "stagi" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
+            bratiska-cli deploy --staging --debug --namespace=${NAMESPACE}
           else
             bratiska-cli deploy --debug --namespace=${NAMESPACE}
           fi
