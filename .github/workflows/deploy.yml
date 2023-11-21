@@ -62,6 +62,8 @@ jobs:
 
       - name: Set Cluster Info & Setup kubectl
         run: |
+          echo "GITHUB_BASE_REF=${GITHUB_BASE_REF}"
+          
           if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
             export ENVIRONMENT="staging"
             export CLUSTER_URL="https://tkg.staging.bratislava.sk"
