@@ -67,11 +67,11 @@ jobs:
           echo "GITHUB_REF=${GITHUB_REF}"
           echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
 
-          if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
+          if [[ "${GITHUB_REF_NAME,,}" =~ "stagi" ]]; then
             export ENVIRONMENT="staging"
             export CLUSTER_URL="https://tkg.staging.bratislava.sk"
             export CLUSTER_TOKEN=${{ secrets.STAGING_STANDALONE_TOKEN }}
-          elif [[ "${GITHUB_BASE_REF,,}" =~ "prod" || "${GITHUB_BASE_REF,,}" =~ "master" || "${GITHUB_BASE_REF,,}" =~ "main" ]]; then
+          elif [[ "${GITHUB_REF_NAME,,}" =~ "prod" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
             export ENVIRONMENT="prod"
             export CLUSTER_URL="https://tkg.bratislava.sk"
             export CLUSTER_TOKEN=${{ secrets.PROD_STANDALONE_TOKEN }}
@@ -95,9 +95,9 @@ jobs:
 
       - name: Build & Deploy
         run: |
-          if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
+          if [[ "${GITHUB_REF_NAME,,}" =~ "stagi" ]]; then
             bratiska-cli deploy --staging --debug --namespace=${NAMESPACE}
-          elif [[ "${GITHUB_BASE_REF,,}" =~ "prod" || "${GITHUB_BASE_REF,,}" =~ "master" || "${GITHUB_BASE_REF,,}" =~ "main" ]]; then
+          elif [[ "${GITHUB_REF_NAME,,}" =~ "prod" || "${GITHUB_REF_NAME,,}" =~ "master" || "${GITHUB_REF_NAME,,}" =~ "main" ]]; then
             bratiska-cli deploy --production --namespace=${NAMESPACE}
           else
             bratiska-cli deploy --debug --namespace=${NAMESPACE}
