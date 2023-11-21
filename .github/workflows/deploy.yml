@@ -64,8 +64,9 @@ jobs:
         run: |
           echo "GITHUB_BASE_REF=${GITHUB_BASE_REF}"
           echo "GITHUB_HEAD_REF=${GITHUB_HEAD_REF}"
-          
-          
+          echo "GITHUB_REF=${GITHUB_REF}"
+          echo "GITHUB_REF_NAME=${GITHUB_REF_NAME}"
+
           if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
             export ENVIRONMENT="staging"
             export CLUSTER_URL="https://tkg.staging.bratislava.sk"
