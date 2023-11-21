@@ -63,6 +63,8 @@ jobs:
       - name: Set Cluster Info & Setup kubectl
         run: |
           echo "GITHUB_BASE_REF=${GITHUB_BASE_REF}"
+          echo "GITHUB_HEAD_REF=${GITHUB_HEAD_REF}"
+          
           
           if [[ "${GITHUB_BASE_REF,,}" =~ "stagi" ]]; then
             export ENVIRONMENT="staging"
