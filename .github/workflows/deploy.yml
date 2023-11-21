@@ -58,7 +58,7 @@ jobs:
           git fetch
 
       - name: Setup kubectl
-        uses: Azure/setup-kubectl@v2.1
+        uses: Azure/setup-kubectl@v3
 
       - name: Set Cluster Info & Setup kubectl
         run: |
