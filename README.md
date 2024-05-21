@@ -1,5 +1,7 @@
 # SK Bratislava FOP
 
+[Javalin](https://javalin.io/) server running [Apache FOP](https://xmlgraphics.apache.org/fop/), used for transforming Slovak eGovernment xml forms to pdf.
+
 ## Deployment
 We have multiple options for deploying your app to our Kubernetes cluster.
 
